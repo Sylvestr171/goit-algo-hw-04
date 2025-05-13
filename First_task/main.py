@@ -25,6 +25,23 @@ def total_salary(path:str) -> tuple[int, float]:
     :return: tuple[int, float]
 
     '''
+    path_to_file = Path(path)
+    number_of_developers = 0
+    total_salary = 0
+    average_salary = 0
+    try:
+        with open(path_to_file, 'r', encoding='utf-8') as file:
+
+            for line in file:
+                total_salary += int(line.split(',')[1])
+                number_of_developers += 1
+        average_salary = int(total_salary/number_of_developers)
+    except FileNotFoundError:
+        print ('Sorry File Not Found')
+    except UnicodeError:
+        print ('Decode error')
+    return (total_salary, average_salary)
     
-    
-    pass
+
+total, average = total_salary('./salary_for_developers.txt')
+print(f"Загальна сума заробітної плати: {total}, \nСередня заробітна плата: {average}")
