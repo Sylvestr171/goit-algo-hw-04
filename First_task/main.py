@@ -25,23 +25,28 @@ def total_salary(path:str) -> tuple[int, float]:
     :return: tuple[int, float]
 
     '''
-    path_to_file = Path(path)
-    number_of_developers = 0
+    path_to_file = Path(path) #отримуємо шлях
+    number_of_developers = 0 #ініціалізуємо змінні
     total_salary = 0
     average_salary = 0
     try:
         with open(path_to_file, 'r', encoding='utf-8') as file:
-
-            for line in file:
+            for line in file: #построково читаємо файл
+                '''
+                через спліт розбиваємо вхідний рядок на елементи 
+                і одразу звертаємось до другого елемента який сумуємо у total_salary 
+                '''
                 total_salary += int(line.split(',')[1])
-                number_of_developers += 1
-        average_salary = int(total_salary/number_of_developers)
-    except FileNotFoundError:
+                number_of_developers += 1 #кількість рядків = кількості працівників
+        average_salary = int(total_salary/number_of_developers) #рахуємо середнє
+        '''
+        два винятки, якщо файл не знайдено і помилка кодування
+        '''
+    except FileNotFoundError: 
         print ('Sorry File Not Found')
     except UnicodeError:
         print ('Decode error')
     return (total_salary, average_salary)
     
-
 total, average = total_salary('./salary_for_developers.txt')
 print(f"Загальна сума заробітної плати: {total}, \nСередня заробітна плата: {average}")
