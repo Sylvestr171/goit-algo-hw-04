@@ -23,7 +23,6 @@ def total_salary(path:str) -> tuple[int, float]:
 
     Output:
     :return: tuple[int, float]
-
     '''
     
     
