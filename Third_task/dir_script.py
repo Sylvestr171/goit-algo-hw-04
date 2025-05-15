@@ -64,14 +64,15 @@ def iter_object_in_dir(path: Path):
 list_of_dir = [] #буде містити перелік папок
 list_of_file = [] #буде містити перелік файлів
 #функція для виводу несортованої структури, а також формування списків шляхів до папокі файлів
-def list_of_dir_and_files(path: Path) -> list[Path]:
+def list_of_dir_and_files(path: Path) -> list[list[Path]]:
     list_of_dir.append(path)
     for i in path.iterdir():
         if i.is_file(): #перевіряємо чи об'єкт файл
             list_of_file.append(i) #формуємо список усіх шляхів до папок
         else:  #перевіряємо чи об'єкт папка
-            list_of_dir_and_files(i) #рекурсивно викикаємо функцію
+            list_of_dir_and_files(i) #рекурсивно вилкикаємо функцію
     return list_of_dir, list_of_file 
+
 '''Це я трохи погрався щоб розібратись але питань стало ще більше
 Верхній варіант працює, а от наступний ні, хоча як мені здавалось все логічно і повинно працювати
 Списки list_of_dir, list_of_file спеціально не ініціюю
