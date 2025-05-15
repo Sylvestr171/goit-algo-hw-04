@@ -13,7 +13,7 @@ def show_detailed_help():
 Зразок використання:
     python dir_script.py <path_to_dir>
 
-🔹 Аргументи:
+Аргументи:
     <path_to_dir>       Шлях до текстового файлу, який потрібно прочитати.
     -h, --help, /?  Показати це повідомлення.
 
@@ -50,11 +50,9 @@ def validation_arg(list_of_arg: list) -> Path:
     else:
         show_short_help()
 
-path_to_dir = validation_arg(sys.argv) #виконання перевірки аргументів
-
 #функція для виводу несортованої структури, а також формування списків шляхів до папокі файлів
-def iter_object_in_dir(path: Path) -> list[Path]:
-    string_with_space = "|" + len(path_to_dir.parts) * "--"
+def iter_object_in_dir(path: Path):
+    string_with_space = "|" + len(path.parts) * "--"
     print (colorama.Fore.BLUE, string_with_space, path.name, '\b\\')
     for i in path.iterdir():
         if i.is_file(): #перевіряємо чи об'єкт файл
@@ -64,24 +62,37 @@ def iter_object_in_dir(path: Path) -> list[Path]:
             iter_object_in_dir(i) #рекурсивно викикаємо функцію 
 
 
-# list_of_dir = [] #буде містити перелік папок
-# list_of_file = [] #буде містити перелік файлів
+list_of_dir = [] #буде містити перелік папок
+list_of_file = [] #буде містити перелік файлів
 #функція для виводу несортованої структури, а також формування списків шляхів до папокі файлів
 def list_of_dir_and_files(path: Path) -> list[Path]:
-    try:
-        list_of_dir.append(path) #формуємо список усіх шляхів до папок
+    list_of_dir.append(path)
+    for i in path.iterdir():
+        if i.is_file(): #перевіряємо чи об'єкт файл
+            list_of_file.append(i) #формуємо список усіх шляхів до папок
+        else:  #перевіряємо чи об'єкт папка
+            list_of_dir_and_files(i) #рекурсивно викикаємо функцію
+    return list_of_dir, list_of_file 
+'''Це я трохи погрався щоб розібратись але питань стало ще більше
+Верхній варіант працює, а от наступний ні, хоча як мені здавалось все логічно і повинно працювати
+Списки list_of_dir, list_of_file спеціально не ініціюю
+def list_of_dir_and_files(path: Path) -> list[Path]:
+    try: #тут малоб відбутись перехоплення помилки при першій ітерації, а при наступних відпрацював би append
+        list_of_dir.append(path)
     except NameError:
         list_of_dir = [path]
     for i in path.iterdir():
         if i.is_file(): #перевіряємо чи об'єкт файл
-            try:
+            try: #тут малоб відбутись перехоплення помилки при першій ітерації, а при наступних відпрацював би append
                 list_of_file.append(i) #формуємо список усіх шляхів до папок
             except NameError:
                 list_of_file = [i]
-        elif i.is_dir():  #перевіряємо чи об'єкт папка
+        else:  #перевіряємо чи об'єкт папка
             list_of_dir_and_files(i) #рекурсивно викикаємо функцію
-    return list_of_dir, list_of_file 
+    return list_of_dir, list_of_file
 
+ЧОМУ ЧЕРЕЗ try/except не працює?????????
+'''
 
 def print_sorted_structure(dir:list[Path], file:list[Path]):
     string_with_space = ''
@@ -92,9 +103,11 @@ def print_sorted_structure(dir:list[Path], file:list[Path]):
             if k.parent == i:
                 print(colorama.Fore.GREEN, string_with_space, k.name)
 
-print (colorama.Fore.RED, '\n\nНе сортована структура теки\n', colorama.Fore.RESET)
-iter_object_in_dir(path_to_dir)
-print (colorama.Fore.RED, '\n\nCортована структура теки\n', colorama.Fore.RESET)
-print(list_of_dir_and_files(path_to_dir)[0], list_of_dir_and_files(path_to_dir)[1])
-print_sorted_structure(list_of_dir_and_files(path_to_dir)[0], list_of_dir_and_files(path_to_dir)[1])
-print(colorama.Fore.RESET)
+if __name__ == '__main__':
+    path_to_dir = validation_arg(sys.argv) #виконання перевірки аргументів
+    if path_to_dir is not None:
+        print (colorama.Fore.RED, '\n\nНе сортована структура теки\n', colorama.Fore.RESET)
+        iter_object_in_dir(path_to_dir)
+        print (colorama.Fore.RED, '\n\nCортована структура теки\n', colorama.Fore.RESET)
+        print_sorted_structure(list_of_dir_and_files(path_to_dir)[0], list_of_dir_and_files(path_to_dir)[1])
+        print(colorama.Fore.RESET)
