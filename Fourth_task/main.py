@@ -1,3 +1,5 @@
+from random import choice
+from pathlib import Path
 
 #->->->->->->->->->->***FOURTH TASK***<-<-<-<-<-<-<-<-<-<
 
@@ -32,6 +34,18 @@ def show_all(contacts:dict):
     print(f"{key} => {value}")
 
 
+current_dir = Path(__file__).parent
+
+#функція для вибору рандомної фрази для відповіді на hello
+def get_random_phrase():
+    try:
+        with open(current_dir / "hello.txt", "r", encoding="utf-8") as file:
+            phrase = file.readlines()
+            return choice(phrase).strip()
+    except FileNotFoundError:
+        return "How can I help you?"
+
+
 def main():
     contacts = {}
     print("Welcome to the assistant bot!")
@@ -44,7 +58,7 @@ def main():
                 print("Good bye!")
                 break
             case "hello":
-                print("How can I help you?")
+                print(get_random_phrase())
             case "add":
                 print(add_contact(args, contacts))
             case "change":
