@@ -29,10 +29,8 @@ def show_phone(args:str, contacts:dict) -> str:
     return contacts.get(name, 'The name is missing')
 
 #Функція виведення всієї адресної книги Команда: "all"
-def show_all(contacts:dict):
-   for key, value in contacts.items():
-    print(f"{key} => {value}")
-
+def show_all(contacts: dict) -> str:
+    return '\n'.join(f"{key} => {value}" for key, value in contacts.items())
 
 current_dir = Path(__file__).parent
 
@@ -66,7 +64,7 @@ def main():
             case "phone":
                 print(show_phone(args, contacts))
             case "all":
-                show_all(contacts)
+                print(show_all(contacts))
             case "help" | "?":
                 print("""The bot helps to work with the contact book.
                         Commands and functions:
